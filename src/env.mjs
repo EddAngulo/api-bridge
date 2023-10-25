@@ -14,6 +14,8 @@ export const env = createEnv({
 		//     (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
 		//     "You forgot to change the default URL"
 		//   ),
+		UPSTASH_REDIS_REST_URL: z.string().url(),
+		UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
 		VELOCIFY_SERVER_URL: z.string().url(),
 		VELOCIFY_USER: z.string().email().includes("nuc.edu"),
 		VELOCIFY_PWD: z.string().min(1),
@@ -40,6 +42,8 @@ export const env = createEnv({
 	 */
 	runtimeEnv: {
 		// DATABASE_URL: process.env.DATABASE_URL,
+		UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+		UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
 		VELOCIFY_SERVER_URL: process.env.VELOCIFY_SERVER_URL,
 		VELOCIFY_USER: process.env.VELOCIFY_USER,
 		VELOCIFY_PWD: process.env.VELOCIFY_PWD,

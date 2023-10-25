@@ -18,6 +18,7 @@
 		"@trpc/next": "^10.37.1",
 		"@trpc/react-query": "^10.37.1",
 		"@trpc/server": "^10.37.1",
+		"@upstash/redis": "^1.23.4",
 		"drizzle-orm": "^0.28.5",
 		"fast-xml-parser": "^4.3.2",
 		"next": "^13.5.4",
