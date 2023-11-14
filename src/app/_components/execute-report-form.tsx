@@ -6,18 +6,40 @@ import { api } from "@/trpc/react";
 
 export function ExecuteReportForm() {
 	const [shouldFetch, setShouldFetch] = useState(false);
-	const { data, isLoading, isError } = api.bridge.getReport.useQuery(
-		undefined,
-		{ enabled: shouldFetch },
-	);
+	const [posted, setPosted] = useState(false);
+	const { isError, isFetching, isSuccess, data } =
+		api.bridge.getReport.useQuery(undefined, {
+			enabled: shouldFetch,
+			retry: false,
+		});
+
+	const { isLoading, mutateAsync } = api.bridge.sendCSV.useMutation();
+	const csv = data?.csv ?? "";
+
 	useEffect(() => {
-		if (!isLoading && !isError) {
+		if (!isFetching && (isError || isSuccess)) {
 			setShouldFetch(false);
-			console.log(data?.csv);
+			setPosted(false);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading, isError]);
-	console.log({ isLoading, isError, data, shouldFetch });
+	}, [isError, isFetching, isSuccess, data]);
+
+	useEffect(() => {
+		const sendCSV = async (csv: string) => {
+			try {
+				const response = await mutateAsync({ csv });
+				alert(response.message);
+				setPosted(true);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		if (csv.length > 0 && !posted) {
+			void sendCSV(csv);
+		} else if (csv.length === 0 && !posted && isSuccess) {
+			alert("No new data to send");
+		}
+	}, [csv, isSuccess, posted, mutateAsync]);
+
 	return (
 		<form
 			onSubmit={(e) => {
@@ -29,9 +51,11 @@ export function ExecuteReportForm() {
 			<button
 				type="submit"
 				className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-				disabled={shouldFetch}
+				disabled={shouldFetch || isLoading}
 			>
-				{shouldFetch ? "Executing Report..." : "Execute Report"}
+				{shouldFetch || isLoading
+					? "Executing Report..."
+					: "Execute Report"}
 			</button>
 		</form>
 	);

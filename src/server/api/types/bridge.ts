@@ -11,8 +11,10 @@ export type ReportRow = {
 	Campus?: string;
 	LeadVendor?: string;
 	IsDuplicate?: boolean;
-	ParentLeadId?: number;
 	Status?: string;
+	LeadSourceCode?: string;
+	RawProg?: string;
+	InquiryRawProgram?: string;
 };
 
 export type Report = {
@@ -20,4 +22,8 @@ export type Report = {
 	ReportResults: {
 		Result: ReportRow[];
 	};
+};
+
+export type THEFResponse = {
+	message: string;
 };
