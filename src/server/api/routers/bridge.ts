@@ -57,16 +57,17 @@ export const bridgeRouter = createTRPCRouter({
 		const csv = `${keys}\n${body}`;
 
 		const timestamp = sorted.at(-1)?.DateAdded;
-		await redis.set("timestamp", timestamp);
+		// await redis.set("timestamp", timestamp);
 
 		return {
 			csv,
+			timestamp,
 		};
 	}),
 
 	sendCSV: publicProcedure
-		.input(z.object({ csv: z.string() }))
-		.mutation(async ({ input: { csv } }) => {
+		.input(z.object({ csv: z.string(), timestamp: z.string() }))
+		.mutation(async ({ input: { csv, timestamp } }) => {
 			const blob = Readable.from([csv]);
 
 			const url = `${env.THEF_SERVER_URL}`;
@@ -84,6 +85,12 @@ export const bridgeRouter = createTRPCRouter({
 				const errorPayload = json as ErrorResponseProps;
 				throw new ErrorResponse(errorPayload);
 			}
+
+			const redis = new Redis({
+				url: env.UPSTASH_REDIS_REST_URL,
+				token: env.UPSTASH_REDIS_REST_TOKEN,
+			});
+			await redis.set("timestamp", timestamp);
 
 			return json as THEFResponse;
 		}),

@@ -15,6 +15,7 @@ export function ExecuteReportForm() {
 
 	const { isLoading, mutateAsync } = api.bridge.sendCSV.useMutation();
 	const csv = data?.csv ?? "";
+	const timestamp = data?.timestamp ?? "";
 
 	useEffect(() => {
 		if (!isFetching && (isError || isSuccess)) {
@@ -26,7 +27,7 @@ export function ExecuteReportForm() {
 	useEffect(() => {
 		const sendCSV = async (csv: string) => {
 			try {
-				const response = await mutateAsync({ csv });
+				const response = await mutateAsync({ csv, timestamp });
 				alert(response.message);
 				setPosted(true);
 			} catch (error) {
@@ -38,7 +39,7 @@ export function ExecuteReportForm() {
 		} else if (csv.length === 0 && !posted && isSuccess) {
 			alert("No new data to send");
 		}
-	}, [csv, isSuccess, posted, mutateAsync]);
+	}, [csv, timestamp, isSuccess, posted, mutateAsync]);
 
 	return (
 		<form

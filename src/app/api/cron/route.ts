@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
 	try {
-		const { csv } = await api.bridge.getReport.query();
+		const { csv, timestamp } = await api.bridge.getReport.query();
 
 		if ((csv ?? "").length < 1) {
 			console.error("There is no data to report");
@@ -13,7 +13,7 @@ export async function GET() {
 			);
 		}
 
-		await api.bridge.sendCSV.mutate({ csv });
+		await api.bridge.sendCSV.mutate({ csv, timestamp: timestamp ?? "" });
 
 		return NextResponse.json({ status: 201 });
 	} catch (error) {
