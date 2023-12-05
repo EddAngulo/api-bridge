@@ -1,9 +1,11 @@
 import { api } from "@/trpc/server";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
 
 //export async function POST() {
-const apiBridgeCronJob = async () => {
+
+// const apiBridgeCronJob = async () => {
+async function apiBridgeCronJob(_req: NextRequest) {
 	try {
 		const { csv, timestamp } = await api.bridge.getReport.query();
 
@@ -25,6 +27,6 @@ const apiBridgeCronJob = async () => {
 			{ status: 500 },
 		);
 	}
-};
+}
 
 export const POST = verifySignatureAppRouter(apiBridgeCronJob);
