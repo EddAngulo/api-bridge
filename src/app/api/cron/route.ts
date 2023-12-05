@@ -1,7 +1,7 @@
 import { api } from "@/trpc/server";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function POST() {
 	try {
 		const { csv, timestamp } = await api.bridge.getReport.query();
 
