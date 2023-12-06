@@ -11,10 +11,7 @@ async function apiBridgeCronJob(_req: NextRequest) {
 
 		if ((csv ?? "").length < 1) {
 			console.error("There is no data to report");
-			return NextResponse.json(
-				{ error: "There is no data to report" },
-				{ status: 500 },
-			);
+			return new Response(null, { status: 204 });
 		}
 
 		await api.bridge.sendCSV.mutate({ csv, timestamp: timestamp ?? "" });
@@ -29,4 +26,4 @@ async function apiBridgeCronJob(_req: NextRequest) {
 	}
 }
 
-export const POST = verifySignatureAppRouter(apiBridgeCronJob);
+export const POST = apiBridgeCronJob;
