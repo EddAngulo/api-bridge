@@ -1,20 +1,18 @@
-import { api } from "@/trpc/server";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
+import { fetchReports } from "@/server/shared/fetchReports";
+import { postReports } from "@/server/shared/postReports";
 
-//export async function POST() {
-
-// const apiBridgeCronJob = async () => {
-async function apiBridgeCronJob(_req: NextRequest) {
+const apiBridgeCronJob = async () => {
 	try {
-		const { csv, timestamp } = await api.bridge.getReport.query();
+		const { csv, timestamp } = await fetchReports();
 
 		if ((csv ?? "").length < 1) {
 			console.error("There is no data to report");
 			return new Response(null, { status: 204 });
 		}
 
-		await api.bridge.sendCSV.mutate({ csv, timestamp: timestamp ?? "" });
+		await postReports({ csv, timestamp: timestamp ?? "" });
 
 		return NextResponse.json({ status: 201 });
 	} catch (error) {
@@ -24,6 +22,6 @@ async function apiBridgeCronJob(_req: NextRequest) {
 			{ status: 500 },
 		);
 	}
-}
+};
 
 export const POST = apiBridgeCronJob;
