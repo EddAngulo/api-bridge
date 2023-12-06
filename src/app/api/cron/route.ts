@@ -14,7 +14,7 @@ const apiBridgeCronJob = async () => {
 
 		await postReports({ csv, timestamp: timestamp ?? "" });
 
-		return NextResponse.json({ status: 201 });
+		return NextResponse.json({ message: "Success" }, { status: 201 });
 	} catch (error) {
 		console.error("Error sending data:", error);
 		return NextResponse.json(
