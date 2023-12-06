@@ -9,7 +9,7 @@ const apiBridgeCronJob = async () => {
 
 		if ((csv ?? "").length < 1) {
 			console.error("There is no data to report");
-			return new Response(null, { status: 204 });
+			return new Response(null, { status: 204 }) as NextResponse;
 		}
 
 		await postReports({ csv, timestamp: timestamp ?? "" });
