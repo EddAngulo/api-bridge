@@ -24,4 +24,4 @@ const apiBridgeCronJob = async () => {
 	}
 };
 
-export const POST = apiBridgeCronJob;
+export const POST = verifySignatureAppRouter(apiBridgeCronJob);
